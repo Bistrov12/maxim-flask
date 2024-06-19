@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{{ url_for('index') }}">VAZIZON</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <form class="form-inline d-flex justify-content-center w-100" action="{{ url_for('search') }}" method="GET">
+            <input class="form-control mr-sm-2 search-bar" type="search" placeholder="Найти товар" aria-label="Поиск" name="q">
+            <button class="btn btn-outline-custom my-2 my-sm-0" type="submit">Поиск</button>
+        </form>
+
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index') }}">Главная</a>
+            </li>
+            {% if current_user.is_authenticated %}
+                {% if current_user.role == 'buyer' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('cart') }}">Корзина</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('my_orders') }}">Мои заказы</a>
+                    </li>
+                {% elif current_user.role == 'seller' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('my_products') }}">Мои товары</a>
+                    </li>
+                {% elif current_user.role == 'admin' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Панель администратора</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('edit_profile') }}">{{ current_user.username }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Выход</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}">Вход</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('register') }}">Регистрация</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flashes">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+
+    <!-- Разделительная полоса перед футером -->
+    <div class="footer-divider"></div>
+
+    <!-- Footer -->
+    <footer class="bg-light text-dark mt-5 p-4 border">
+        <div class="container">
+            <div class="row">
+                <!-- Contacts Section -->
+                <div class="col-md-4 mb-3">
+                    <h5 class="font-weight-bold">Контакты</h5>
+                    <p><a href="https://maps.google.com" class="text-dark" target="_blank">Наш пункт выдачи</a></p>
+                    <p>Телефон: +7 (999) 123-45-67</p>
+                    <button class="btn btn-primary">Задать вопрос</button>
+                </div>
+                <!-- Navigation Section -->
+                <div class="col-md-4 mb-3">
+                    <h5 class="font-weight-bold">Навигация</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-dark">Главная</a></li>
+                        <li><a href="#" class="text-dark">Товары</a></li>
+                        <li><a href="#" class="text-dark">Контакты</a></li>
+                        <li><a href="#" class="text-dark">О нас</a></li>
+                    </ul>
+                </div>
+                <!-- Social Media Section -->
+                <div class="col-md-4 mb-3">
+                    <h5 class="font-weight-bold">Мы в соцсетях</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="https://vk.com" class="text-dark" target="_blank">VK</a></li>
+                        <li><a href="https://www.whatsapp.com" class="text-dark" target="_blank">WhatsApp</a></li>
+                    </ul>
+                    <p>&copy; 2024 VAZIZON</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+<button onclick="topFunction()" id="topBtn" title="Go to top">Наверх</button>
+
+    <script>
+var topButton = document.getElementById("topBtn");
+
+window.onscroll = function() {
+  scrollFunction();
+};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    topButton.style.display = "block";
+  } else {
+    topButton.style.display = "none";
+  }
+}
+
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+
+
+
+
+
+
+</script>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
