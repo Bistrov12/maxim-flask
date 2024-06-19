@@ -1,2 +1,3 @@
-# maxim-flask
+# maxim-flask.io
+
 project
